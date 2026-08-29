@@ -1,0 +1,4 @@
+# Additional project-specific paths that must never be sent to DeepSeek Web
+customer-data/
+internal-notes/
+*.production.json
