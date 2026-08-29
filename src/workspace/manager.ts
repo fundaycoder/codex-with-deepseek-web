@@ -57,7 +57,6 @@ export interface ListDirectoryResult {
 
 export interface ProjectConfig {
   name?: string;
-  maxIterations?: number;
 }
 
 const DEFAULT_MAX_LINES = 400;

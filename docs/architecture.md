@@ -5,7 +5,7 @@
 │      DeepSeek Web        │
 │   Plan / Review only     │
 └────────────▲─────────────┘
-             │ confirmed, bounded text packets
+             │ two confirmed, bounded packets
              │ rendered [C2D] replies
 ┌────────────┴─────────────┐
 │ Codex + in-app Browser   │
@@ -28,7 +28,7 @@
 - `session/`: stores one validated `chat.deepseek.com` conversation URL per workspace.
 - `execution/`: local JSONL records for Codex iterations.
 - `cli/`: exposes `status`, `session`, `packet`, and `record` commands.
-- `skill/`: owns the browser-driven PLAN → EXECUTE → REVIEW loop.
+- `skill/`: owns the browser-driven PLAN → LOCAL EXECUTION → FINAL REVIEW flow.
 
 There is no model client, public listener, tunnel, MCP server, or OAuth flow.
 The browser is the only transport to DeepSeek Web.

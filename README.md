@@ -10,6 +10,10 @@ After the user confirms the exact transfer, Codex submits the packet to DeepSeek
 Web through the in-app Browser. DeepSeek returns a structured plan or review;
 Codex keeps exclusive ownership of editing, shell, Git, and tests.
 
+The standard workflow has two confirmation checkpoints only: one before the
+planning packet and one before the final review packet. Codex works continuously
+between them and sends no progress or clarification messages to DeepSeek.
+
 This project does not call a model API, upload a repository, expose local tools to
 DeepSeek, run a public tunnel, or use OAuth/MCP bridging.
 
@@ -61,8 +65,8 @@ Use Codex with DeepSeek Web to implement ...
 ```
 
 On first use, Codex opens `https://chat.deepseek.com/` and asks you to sign in if
-needed. Before every project-context submission, it shows the exact file ranges or
-diff being sent and asks for confirmation.
+needed. A normal successful task asks twice: once before sending focused planning
+context and once before sending the final bounded diff and test summary.
 
 Codex also discovers user skills from
 `~/.agents/skills/codex-with-deepseek-web/SKILL.md`. Restart Codex if an installed

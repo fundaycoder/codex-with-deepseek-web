@@ -17,12 +17,14 @@ password or verification code, inspect browser storage, or solve a CAPTCHA.
 ## Saved conversation no longer opens
 
 Run `c2d session clear -w <workspace>`, create a replacement conversation after
-user confirmation, send the boot prompt and a short state handoff, then save its URL.
+user confirmation, and use the next unused planning or final-review checkpoint to
+send the required context. Do not send a separate handoff message.
 
 ## Packet says `truncated: true`
 
-Use smaller `path#start-end` ranges, reduce the number of `--file` options, or split
-the review into focused packets. Tell DeepSeek and the user what was not covered.
+Use smaller `path#start-end` ranges or reduce the number of `--file` options until
+one useful packet fits. Do not split a checkpoint into multiple messages. Tell
+DeepSeek and the user what was not covered.
 
 ## A file appears in `omittedFiles`
 
@@ -32,5 +34,6 @@ without including the protected content.
 
 ## DeepSeek reply is not structured
 
-Ask once for a single `[C2D]` reply with the required state and fields. Because
-that is another browser submission, obtain action-time confirmation first.
+Interpret the visible reply conservatively and continue locally when its intent is
+clear. Do not spend an extra DeepSeek message on format repair. If the reply is not
+usable, surface the blocker to the user.

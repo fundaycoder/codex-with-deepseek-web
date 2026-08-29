@@ -74,7 +74,7 @@ c2d --version
 c2d status -w /path/to/your/project --json
 ```
 
-The first command should print `0.2.0`. The second should return JSON describing
+The first command should print `0.3.0`. The second should return JSON describing
 the selected workspace and its saved DeepSeek conversation, if one exists.
 
 ## First use
@@ -91,13 +91,16 @@ The workflow is:
 1. Codex inspects the project locally and selects only the necessary excerpts.
 2. `c2d packet` blocks sensitive paths, redacts common inline secrets, and caps
    the packet size.
-3. Codex shows the exact outbound file ranges or diff and asks for confirmation.
+3. **Planning checkpoint:** Codex shows the exact outbound excerpts and asks for
+   the first confirmation.
 4. You sign in to DeepSeek Web yourself if needed. Codex sends the confirmed
    packet to one conversation for that workspace.
-5. DeepSeek returns a structured plan. Codex evaluates it, edits locally, and
-   runs the relevant tests.
-6. Codex asks again before sending the bounded diff and test summary for an
-   independent DeepSeek review.
+5. DeepSeek returns a structured plan. Codex evaluates it, then continuously
+   edits, diagnoses, and tests locally without sending intermediate messages.
+6. **Final-review checkpoint:** after local work is complete, Codex asks for the
+   second confirmation before sending one bounded diff and test summary.
+7. Codex handles clear review findings locally and does not automatically send a
+   third DeepSeek message.
 
 DeepSeek never receives local shell, Git, or file-write access.
 

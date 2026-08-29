@@ -81,7 +81,8 @@ export async function buildPlanPacket(workspace, options) {
     const request = `\nREQUEST:\nReturn one structured message. Its first four lines must be exactly:\n` +
         `[C2D]\nSTATE: PLAN\nTASK_ID: ${options.taskId}\nITERATION: ${options.iteration + 1}\n\n` +
         `Then include RATIONALE, ACTIONS, FILES_LIKELY_INVOLVED, TESTS, RISKS, and ` +
-        `SUCCESS_CRITERIA. Keep it finite and executable.\n`;
+        `SUCCESS_CRITERIA. This is the only planning request: make the plan self-contained, ` +
+        `finite, and executable without follow-up questions unless genuinely blocked.\n`;
     const fileBudget = Math.max(1000, maxChars - fixed.length - request.length);
     const collected = await collectFileSections(workspace, options.files ?? [], fileBudget);
     let packet = fixed + (collected.text || "(No file excerpts supplied. Plan from the project metadata and goal.)\n") + request;
@@ -103,7 +104,9 @@ export async function buildReviewPacket(workspace, options) {
         `Its first line must be [C2D], followed by STATE: DONE if the success criteria are met; ` +
         `STATE: PLAN with concrete corrections if not; or STATE: BLOCKED with the exact reason. ` +
         `Then include TASK_ID: ${options.taskId} and ITERATION: ${options.iteration}. ` +
-        `Check correctness, regressions, security, and tests.\n`;
+        `This is the only review request: prioritize complete, actionable findings because ` +
+        `Codex will handle them locally without another review message. Check correctness, ` +
+        `regressions, security, and tests.\n`;
     const preamble = header("EXECUTED", options) +
         `${TRUST_BOUNDARY}\nGOAL:\n${options.goal}\n\nEXECUTION_SUMMARY:\n` +
         `Tests: ${options.tests ?? "not reported"}\nNotes: ${options.notes ?? "none"}\n\n`;

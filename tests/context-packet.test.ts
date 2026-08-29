@@ -51,6 +51,7 @@ describe("context packets", () => {
     });
     expect(result.packet).toContain("STATE: INIT");
     expect(result.packet).toContain("[C2D]\nSTATE: PLAN\nTASK_ID: c2d_ab12\nITERATION: 1");
+    expect(result.packet).toContain("only planning request");
     expect(result.packet).toContain("Add a configuration screen");
     expect(result.packet).toContain("[REDACTED]");
     expect(result.packet).not.toContain("super-secret-value");
@@ -71,6 +72,7 @@ describe("context packets", () => {
     expect(result.packet).toContain("changed for review");
     expect(result.packet).not.toContain("changed-secret");
     expect(result.packet).toContain("STATE: DONE");
+    expect(result.packet).toContain("only review request");
     git(root, "checkout", "--", "hello.txt");
   });
 

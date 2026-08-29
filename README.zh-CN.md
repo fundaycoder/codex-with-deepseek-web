@@ -10,6 +10,9 @@
 DeepSeek 网页版。DeepSeek 给出计划或审查意见，Codex 再在本地修改代码、
 执行命令和运行测试。
 
+标准流程只有两个确认点：规划前一次、最终复审前一次。两者之间 Codex 连续
+修改和测试，不向 DeepSeek 发送进度、追问或中间复审消息。
+
 它不是 DeepSeek API 客户端，也不会给 DeepSeek 提供本地工具权限。
 
 ```text
@@ -28,6 +31,7 @@ Codex（编辑 / Shell / Git / 测试）
 ## 特点
 
 - 零模型 API：不需要 DeepSeek API Key。
+- 两次确认：规划包一次、最终复审包一次。
 - 职责隔离：DeepSeek 无法读写本地文件或执行命令。
 - 最小披露：只发送本轮必要的文件范围、Diff 和测试摘要。
 - 两层保护：敏感文件路径直接拒绝，常见行内密钥自动替换为 `[REDACTED]`。
@@ -96,7 +100,8 @@ Copy-Item "skill\SKILL.md" (Join-Path $skillDir "SKILL.md") -Force
 Codex 负责读取项目、改代码和跑测试。目标：给这个项目增加导出 CSV 功能。
 ```
 
-每次将项目代码片段或 Diff 发往 DeepSeek 前，Codex 都会列出发送范围并再次询问你。
+正常完成一个任务只会询问两次：发送规划资料前一次，发送最终 Diff 与测试摘要前一次。
+复审后的明确修复由 Codex 在本地完成，不会自动发起第三轮 DeepSeek 对话。
 
 ## 更新与卸载
 
