@@ -5,7 +5,7 @@
 │      DeepSeek Web        │
 │   Plan / Review only     │
 └────────────▲─────────────┘
-             │ two confirmed, bounded packets
+             │ confirmed, bounded iteration packets
              │ rendered [C2D] replies
 ┌────────────┴─────────────┐
 │ Codex + in-app Browser   │
@@ -29,6 +29,10 @@
 - `execution/`: local JSONL records for Codex iterations.
 - `cli/`: exposes `status`, `session`, `packet`, and `record` commands.
 - `skill/`: owns the browser-driven PLAN → LOCAL EXECUTION → FINAL REVIEW flow.
+
+The PLAN transition is latency-sensitive. Skill activation goes directly through
+`status` and a goal-first planning packet to confirmation and browser submission.
+Broad repository discovery begins only after the PLAN reply.
 
 There is no model client, public listener, tunnel, MCP server, or OAuth flow.
 The browser is the only transport to DeepSeek Web.

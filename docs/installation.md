@@ -74,7 +74,7 @@ c2d --version
 c2d status -w /path/to/your/project --json
 ```
 
-The first command should print `0.3.0`. The second should return JSON describing
+The first command should print `0.5.0`. The second should return JSON describing
 the selected workspace and its saved DeepSeek conversation, if one exists.
 
 ## First use
@@ -88,19 +88,25 @@ diff. Codex should edit the project and run the tests. Goal: add CSV export.
 
 The workflow is:
 
-1. Codex inspects the project locally and selects only the necessary excerpts.
-2. `c2d packet` blocks sensitive paths, redacts common inline secrets, and caps
-   the packet size.
-3. **Planning checkpoint:** Codex shows the exact outbound excerpts and asks for
-   the first confirmation.
+1. Codex immediately builds a planning packet from your goal, detected project
+   metadata, and a bounded two-level tree. It does not first inspect the whole
+   repository, run tests, or edit files.
+2. Source excerpts are omitted by default. A focused excerpt is included only
+   when you named it or it is indispensable. `c2d packet` blocks sensitive paths,
+   redacts common inline secrets, and caps the packet size.
+3. **Planning checkpoint:** Codex immediately shows the exact outbound context
+   and asks for the first confirmation. Once confirmed, sending is its next action.
 4. You sign in to DeepSeek Web yourself if needed. Codex sends the confirmed
    packet to one conversation for that workspace.
-5. DeepSeek returns a structured plan. Codex evaluates it, then continuously
-   edits, diagnoses, and tests locally without sending intermediate messages.
-6. **Final-review checkpoint:** after local work is complete, Codex asks for the
-   second confirmation before sending one bounded diff and test summary.
-7. Codex handles clear review findings locally and does not automatically send a
-   third DeepSeek message.
+5. DeepSeek returns a structured plan. Only then does Codex perform full local
+   discovery and complete one meaningful edit, diagnosis, and test batch.
+6. Codex records that iteration, builds a bounded diff/test packet, obtains the
+   host-required one-line confirmation, and sends it to the same DeepSeek chat.
+7. A PLAN reply starts the next local batch automatically. DONE is the final
+   review. The loop stops after 12 review iterations unless you ask to continue.
+
+No new task instruction is needed between iterations. A Skill cannot waive a
+mandatory action-time confirmation imposed by the Codex browser host.
 
 DeepSeek never receives local shell, Git, or file-write access.
 

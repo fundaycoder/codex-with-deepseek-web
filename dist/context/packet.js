@@ -104,9 +104,11 @@ export async function buildReviewPacket(workspace, options) {
         `Its first line must be [C2D], followed by STATE: DONE if the success criteria are met; ` +
         `STATE: PLAN with concrete corrections if not; or STATE: BLOCKED with the exact reason. ` +
         `Then include TASK_ID: ${options.taskId} and ITERATION: ${options.iteration}. ` +
-        `This is the only review request: prioritize complete, actionable findings because ` +
-        `Codex will handle them locally without another review message. Check correctness, ` +
-        `regressions, security, and tests.\n`;
+        `Review this execution iteration and prioritize complete, actionable findings. ` +
+        `If corrections are needed, return STATE: PLAN so Codex can apply another local ` +
+        `edit/test batch and submit the next iteration. Check correctness, regressions, ` +
+        `security, and tests. Return STATE: DONE only when the goal and success criteria ` +
+        `are satisfied.\n`;
     const preamble = header("EXECUTED", options) +
         `${TRUST_BOUNDARY}\nGOAL:\n${options.goal}\n\nEXECUTION_SUMMARY:\n` +
         `Tests: ${options.tests ?? "not reported"}\nNotes: ${options.notes ?? "none"}\n\n`;

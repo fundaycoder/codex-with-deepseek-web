@@ -42,6 +42,21 @@ describe("file selection", () => {
 });
 
 describe("context packets", () => {
+  it("builds a goal-first planning packet without reading source files", async () => {
+    const result = await buildPlanPacket(workspace, {
+      taskId: "c2d_fast",
+      iteration: 0,
+      goal: "Add CSV export",
+    });
+    expect(result.packet).toContain("Add CSV export");
+    expect(result.packet).toContain("WORKSPACE_TREE:");
+    expect(result.packet).toContain("(No file excerpts supplied. Plan from the project metadata and goal.)");
+    expect(result.includedFiles).toEqual([]);
+    expect(result.omittedFiles).toEqual([]);
+    expect(result.redactions).toBe(0);
+    expect(result.truncated).toBe(false);
+  });
+
   it("builds a planning packet and omits denied files", async () => {
     const result = await buildPlanPacket(workspace, {
       taskId: "c2d_ab12",
@@ -72,7 +87,8 @@ describe("context packets", () => {
     expect(result.packet).toContain("changed for review");
     expect(result.packet).not.toContain("changed-secret");
     expect(result.packet).toContain("STATE: DONE");
-    expect(result.packet).toContain("only review request");
+    expect(result.packet).toContain("submit the next iteration");
+    expect(result.packet).toContain("STATE: DONE only when");
     git(root, "checkout", "--", "hello.txt");
   });
 

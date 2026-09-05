@@ -4,15 +4,21 @@
 
 **English** | [简体中文](README.zh-CN.md) · [Installation guide](docs/installation.md)
 
-Codex selects the smallest useful source excerpts or Git diff, then `c2d packet`
-applies sensitive-path denial, best-effort inline secret redaction, and a size cap.
+On a new task, Codex immediately prepares the DeepSeek planning request from the
+user's goal, detected project metadata, and a bounded workspace tree. It does not
+delay the first handoff with broad source inspection, tests, or local edits.
+Focused source excerpts are included only when already named or indispensable.
+`c2d packet` applies sensitive-path denial, best-effort inline secret redaction,
+and a size cap.
 After the user confirms the exact transfer, Codex submits the packet to DeepSeek
 Web through the in-app Browser. DeepSeek returns a structured plan or review;
 Codex keeps exclusive ownership of editing, shell, Git, and tests.
 
-The standard workflow has two confirmation checkpoints only: one before the
-planning packet and one before the final review packet. Codex works continuously
-between them and sends no progress or clarification messages to DeepSeek.
+After the initial plan, Codex implements, diagnoses, and tests a meaningful batch,
+then asks DeepSeek to inspect the bounded diff. PLAN starts another local batch;
+DONE is the final review. This loop continues without another task instruction,
+up to 12 review iterations. The Codex host may still require a short action-time
+confirmation before each browser submission; a Skill cannot override that policy.
 
 This project does not call a model API, upload a repository, expose local tools to
 DeepSeek, run a public tunnel, or use OAuth/MCP bridging.
@@ -65,8 +71,8 @@ Use Codex with DeepSeek Web to implement ...
 ```
 
 On first use, Codex opens `https://chat.deepseek.com/` and asks you to sign in if
-needed. A normal successful task asks twice: once before sending focused planning
-context and once before sending the final bounded diff and test summary.
+needed. Codex then continues the plan → local execution → DeepSeek review loop
+until DeepSeek returns DONE or a decision is genuinely blocked.
 
 Codex also discovers user skills from
 `~/.agents/skills/codex-with-deepseek-web/SKILL.md`. Restart Codex if an installed

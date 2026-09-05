@@ -14,8 +14,9 @@ and evaluates every proposed action under its normal permissions.
    files are denied. `.c2dignore` adds project rules.
 4. Common inline secrets are replaced with `[REDACTED]`.
 5. Packets have bounded size and report redaction, omission, and truncation metadata.
-6. The standard workflow sends once for planning and once for final review. The
-   user confirms the exact data class and destination immediately before each send.
+6. The standard workflow sends once for planning and once after each meaningful
+   local iteration for review. Every browser submission follows the host's
+   action-time confirmation policy; earlier approval cannot waive a mandatory prompt.
 
 Redaction is best effort, not a complete DLP system. Codex must inspect packet
 metadata and avoid sending sensitive business data even when it does not match a

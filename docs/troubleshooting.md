@@ -17,13 +17,13 @@ password or verification code, inspect browser storage, or solve a CAPTCHA.
 ## Saved conversation no longer opens
 
 Run `c2d session clear -w <workspace>`, create a replacement conversation after
-user confirmation, and use the next unused planning or final-review checkpoint to
-send the required context. Do not send a separate handoff message.
+user confirmation, and send the next required planning or review packet there.
+Do not send a separate handoff message.
 
 ## Packet says `truncated: true`
 
 Use smaller `path#start-end` ranges or reduce the number of `--file` options until
-one useful packet fits. Do not split a checkpoint into multiple messages. Tell
+one useful packet fits. Do not split one iteration into multiple messages. Tell
 DeepSeek and the user what was not covered.
 
 ## A file appears in `omittedFiles`
