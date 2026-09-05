@@ -1,6 +1,6 @@
 {
   "name": "codex-with-deepseek-web",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "DeepSeek Web plans and reviews. Codex executes locally. No model API required.",
   "type": "module",
   "license": "MIT",

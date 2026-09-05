@@ -19,6 +19,8 @@ then asks DeepSeek to inspect the bounded diff. PLAN starts another local batch;
 DONE is the final review. This loop continues without another task instruction,
 up to 12 review iterations. The Codex host may still require a short action-time
 confirmation before each browser submission; a Skill cannot override that policy.
+Conversation health is checked before that prompt, so a missing or expired saved
+chat does not cause a second confirmation for the same planning packet.
 
 This project does not call a model API, upload a repository, expose local tools to
 DeepSeek, run a public tunnel, or use OAuth/MCP bridging.

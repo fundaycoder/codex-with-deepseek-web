@@ -26,10 +26,14 @@ inspection, write a detailed Codex plan, run tests, or edit files.
 3. Include a source excerpt only when the user explicitly named that file or a
    small excerpt is indispensable to state the task. Do not search for extra
    context before the planning submission.
-4. Inspect the packet metadata and immediately request the required action-time
-   confirmation in one short sentence. After confirmation, the browser submission
-   is the next action; do not insert unrelated local analysis before sending.
-5. Perform full repository discovery only after DeepSeek's planning reply.
+4. Resolve the target conversation before asking for confirmation: open the saved
+   URL, or pre-position a fresh chat if the saved conversation is missing or dead.
+   Do not type or submit the packet yet.
+5. Inspect the packet metadata and request the required action-time confirmation
+   once, in one short sentence, for the final destination and payload. After the
+   user confirms, submit immediately without another confirmation for session
+   creation, the boot prompt, or the same unsent packet.
+6. Perform full repository discovery only after DeepSeek's planning reply.
 
 The safety confirmation is not optional, but everything before it must stay on
 this fast path. If sign-in or a CAPTCHA blocks sending, surface that requirement
@@ -77,9 +81,11 @@ multiple DeepSeek messages or imply a full review.
 2. Open `https://chat.deepseek.com/` in the in-app Browser.
 3. If sign-in is required, ask the user to sign in there and tell you when ready.
    Never type credentials, request a verification code, or solve a CAPTCHA yourself.
-4. If no saved session exists, prepare the boot prompt below. Group the boot
-   prompt and first planning packet into the same action-time confirmation, then
-   create one chat, send them, and save its URL with `c2d session set`.
+4. Before requesting confirmation, verify the saved conversation opens. If it is
+   missing or dead, navigate to a fresh chat and mark the boot prompt as required.
+5. Group the boot prompt and first planning packet into one outbound message and
+   one action-time confirmation. After confirmation, send immediately and save
+   the resulting URL with `c2d session set`; do not ask again because the chat is new.
 
 Boot prompt:
 
@@ -101,30 +107,33 @@ RATIONALE, ACTIONS, FILES_LIKELY_INVOLVED, TESTS, RISKS, and SUCCESS_CRITERIA.
 1. Generate a task id `c2d_` plus four random hex characters. Run `c2d status`
    and `c2d packet plan ... --json` immediately. Use the goal-only packet unless
    the immediate planning rule permits a focused excerpt.
-2. Review `includedFiles`, `omittedFiles`, `redactions`, and `truncated` without
+2. Open and verify the saved DeepSeek conversation. If it is unavailable, move to
+   a fresh chat and prepare to prepend the boot prompt. Complete this navigation
+   before asking the user anything.
+3. Review `includedFiles`, `omittedFiles`, `redactions`, and `truncated` without
    doing broader repository analysis.
-3. **Planning submission.** Obtain action-time confirmation for the exact
-   outbound context. Navigate to the saved DeepSeek conversation and submit the
-   boot prompt (when needed) and planning packet together as one message.
-4. Wait for the planning reply and read it from the rendered page. If the reply
+4. **Planning submission.** Obtain one action-time confirmation for the exact
+   final outbound context, then immediately submit the boot prompt (when needed)
+   and planning packet together. Do not ask a second time for the new chat.
+5. Wait for the planning reply and read it from the rendered page. If the reply
    is incomplete or not perfectly structured, interpret it conservatively; do
    not send a format-repair or clarification message. If it is unusable, surface
    the blocker instead of inventing a plan.
-5. Evaluate the plan, then begin full repository discovery. Use Codex's local
+6. Evaluate the plan, then begin full repository discovery. Use Codex's local
    tools to implement one meaningful batch, diagnose failures, and run relevant
    tests. DeepSeek does not control local tools.
-6. Record the iteration with `c2d record`, then build one `c2d packet review ...
+7. Record the iteration with `c2d record`, then build one `c2d packet review ...
    --json` from the bounded current diff and test summary.
-7. Obtain the required one-line action-time confirmation for the exact packet,
+8. Obtain the required one-line action-time confirmation for the exact packet,
    then submit it in the same DeepSeek conversation as the next action.
-8. Handle the reply and continue without waiting for a new task instruction:
+9. Handle the reply and continue without waiting for a new task instruction:
    - `PLAN`: treat its actions as review findings. Apply the next safe local batch,
-     rerun tests, increment the iteration, and repeat steps 6-8.
+     rerun tests, increment the iteration, and repeat steps 7-9.
    - `DONE`: treat this response as the final review. Run a final local verification,
      update session state, and report completion.
    - `BLOCKED`: resolve locally when possible; otherwise surface the exact user
      decision required.
-9. Stop after 12 DeepSeek review iterations unless the user explicitly asks to
+10. Stop after 12 DeepSeek review iterations unless the user explicitly asks to
    continue. Never create an unbounded unattended loop.
 
 Update session metadata with `c2d session set` after every DeepSeek reply. Each
@@ -136,6 +145,8 @@ an earlier instruction or approval cannot waive a mandatory confirmation.
 Use semantic labels, roles, placeholders, and fresh DOM snapshots. Do not depend
 on hashed CSS classes or coordinates. After sending, verify that the message is
 visible and wait for generation to finish before reading the last assistant reply.
-If the saved URL no longer opens, create a replacement only within the next unused
-planning or review submission after confirmation. Do not create an extra handoff
-message.
+Resolve a missing or dead saved URL before requesting confirmation, then include
+the boot prompt in the final disclosed payload. If the destination fails after
+confirmation but before submission, return to a ready-to-send state first; ask
+again only when the payload, destination, or disclosure has materially changed.
+Do not create an extra handoff message.

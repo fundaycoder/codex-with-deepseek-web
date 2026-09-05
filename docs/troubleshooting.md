@@ -16,9 +16,10 @@ password or verification code, inspect browser storage, or solve a CAPTCHA.
 
 ## Saved conversation no longer opens
 
-Run `c2d session clear -w <workspace>`, create a replacement conversation after
-user confirmation, and send the next required planning or review packet there.
-Do not send a separate handoff message.
+Run `c2d session clear -w <workspace>` and navigate to a fresh chat before asking
+for action-time confirmation. Include the boot prompt in the disclosed outbound
+payload, then confirm and send once. Do not ask separately for chat creation and
+do not send a separate handoff message.
 
 ## Packet says `truncated: true`
 

@@ -74,7 +74,7 @@ c2d --version
 c2d status -w /path/to/your/project --json
 ```
 
-The first command should print `0.5.0`. The second should return JSON describing
+The first command should print `0.5.1`. The second should return JSON describing
 the selected workspace and its saved DeepSeek conversation, if one exists.
 
 ## First use
@@ -94,10 +94,11 @@ The workflow is:
 2. Source excerpts are omitted by default. A focused excerpt is included only
    when you named it or it is indispensable. `c2d packet` blocks sensitive paths,
    redacts common inline secrets, and caps the packet size.
-3. **Planning checkpoint:** Codex immediately shows the exact outbound context
-   and asks for the first confirmation. Once confirmed, sending is its next action.
-4. You sign in to DeepSeek Web yourself if needed. Codex sends the confirmed
-   packet to one conversation for that workspace.
+3. **Planning checkpoint:** Codex first makes sure the destination chat is ready,
+   then shows the exact outbound context and asks once. Sending is the next action.
+4. You sign in to DeepSeek Web yourself if needed. A missing or expired saved chat
+   is replaced before confirmation, so creating the new chat does not trigger a
+   duplicate prompt for the same packet.
 5. DeepSeek returns a structured plan. Only then does Codex perform full local
    discovery and complete one meaningful edit, diagnosis, and test batch.
 6. Codex records that iteration, builds a bounded diff/test packet, obtains the
